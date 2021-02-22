@@ -10,22 +10,13 @@ struct testes{
 };
 
 struct argsThreads{
-    int a;
-    int b;
-    int h;
+    int local_a;
+    int local_b;
     int i;
 };
-
-double areasoma = 0;
-int soma = 0;
-
 void* hello_world(void *argumentos){
 
     struct argsThreads *args = (struct argsThreads *)argumentos;
-
-    printf("%d %d %d %d \n", args->a, args->b, args->h, args->i);
-
-    soma += args->i;
 
     pthread_exit(NULL);
 }
@@ -34,35 +25,28 @@ int main(int argc, char const *argv[]) {
     
 // atoi(argv[1]);
 // atoi(argv[2]);
-    int numero_threads = 5;
+    int numero_threads = 2;
     int numero_trapesios = 4;
 
-    pthread_t threads_trapezios[numero_threads];
+    int a = 0;
+    int b = 12;
 
     struct testes test1;
     test1.a = 0;
     test1.b = 12;
     int h = (test1.b - test1.a)/numero_trapesios;
-    pthread_t threads[numero_threads];
+    pthread_t threads_trapezios[numero_threads];
 
     struct argsThreads args;
-    args.a = test1.a;
-    args.b = test1.b;
-    args.h = h;
+    args.local_a = a;
+    args.local_b = b;
     args.i = 0;
 
     for (int i = 0; i < numero_threads; i++){
         args.i = i;
-        printf("%d %d\n", i, args.i);
-        pthread_create(&threads[i], NULL, hello_world, (void * ) &args);
+        pthread_create(&threads_trapezios[i], NULL, hello_world, (void * )(size_t) &args);
+        pthread_join(threads_trapezios[i], &thread_return);
     }
-
-    
-    for(int i = 0; i < numero_threads; i++){
-        pthread_join(threads[i], &thread_return);
-    }
-
-    printf("soma %d\n", soma);
 
     return 0;
 }

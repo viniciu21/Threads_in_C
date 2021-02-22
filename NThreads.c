@@ -5,9 +5,12 @@
 
 #define NTHREADS 5
 
+int soma = 0;
+
 void* hello_world(void *tid){
     printf("Hello World. Esta é a Thread %d\n", (int) (size_t)tid);
-    sleep(((int)(size_t)tid+1)*2);
+    soma += 1;
+    sleep(1);
     pthread_exit(NULL);
 }
 
@@ -33,6 +36,8 @@ int main(int argc, char const *argv[])
         pthread_join(threads[i], &thread_return);
         printf("Thread %d finalizada\n", i);
     }
+
+    printf("Soma: %d\n", soma);
     
     return 0;
 }
